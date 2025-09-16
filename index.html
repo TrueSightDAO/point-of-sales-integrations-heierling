@@ -199,70 +199,6 @@
             flex-shrink: 0;
         }
 
-        /* Quick Actions */
-        .quick-actions {
-            margin-bottom: 30px;
-        }
-
-        .quick-actions h3 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .quick-actions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .quick-action-btn {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            text-align: left;
-            width: 100%;
-        }
-
-        .quick-action-btn:hover:not(:disabled) {
-            border-color: #3498db;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
-        }
-
-        .quick-action-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            background: #f8f9fa;
-        }
-
-        .quick-icon {
-            font-size: 2rem;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: #f8f9fa;
-        }
-
-        .quick-text h4 {
-            margin: 0 0 5px 0;
-            color: #2c3e50;
-        }
-
-        .quick-text p {
-            margin: 0;
-            color: #7f8c8d;
-            font-size: 0.9rem;
-        }
 
         /* Modules Section */
         .modules-section h3 {
@@ -296,28 +232,7 @@
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="quick-actions">
-            <h3>Quick Actions</h3>
-            <div class="quick-actions-grid">
-                <button id="quickInvoiceBtn" class="quick-action-btn" onclick="openInvoiceCreator()" disabled>
-                    <div class="quick-icon">🧾</div>
-                    <div class="quick-text">
-                        <h4>Create Invoice</h4>
-                        <p>Scan products and create invoices</p>
-                    </div>
-                </button>
-                <button id="quickRegisterBtn" class="quick-action-btn" onclick="openRegisterDevice()">
-                    <div class="quick-icon">📱</div>
-                    <div class="quick-text">
-                        <h4>Register Device</h4>
-                        <p>Set up your device for sales reporting</p>
-                    </div>
-                </button>
-            </div>
-        </div>
-
-        <!-- Detailed Modules -->
+        <!-- Main Modules -->
         <div class="modules-section">
             <h3>Available Modules</h3>
             <div class="modules-grid">
@@ -330,9 +245,23 @@
 
                 <div class="module-card" onclick="openInvoiceCreator()">
                     <div class="module-icon">🧾</div>
-                    <h3>Invoice Creator</h3>
+                    <h3>Create Invoice</h3>
                     <p>Create invoices by scanning product UPC codes. Automatically calculates totals with tax breakdown and tracks inventory for sales reporting.</p>
                     <button class="module-btn" id="invoiceModuleBtn">Open Invoice Creator</button>
+                </div>
+
+                <div class="module-card" onclick="window.open('https://docs.google.com/spreadsheets/d/1YFuNAX3ZnUA5RaNezeiERHUxkTg0MnoHWA1zmbyFXvE/edit?gid=1062902235#gid=1062902235', '_blank')">
+                    <div class="module-icon">📊</div>
+                    <h3>Device Logs</h3>
+                    <p>View device logs and transaction records in the Google Sheets database. Monitor all device activities and sales transactions for comprehensive reporting and analysis.</p>
+                    <button class="module-btn">View Device Logs</button>
+                </div>
+
+                <div class="module-card" onclick="window.open('https://myhellocash.com/intern/cash-register/invoice/search', '_blank')">
+                    <div class="module-icon">💳</div>
+                    <h3>HelloCash POS</h3>
+                    <p>Access the HelloCash point of sale system directly. Search invoices, manage transactions, and access all POS functionality through the web interface.</p>
+                    <button class="module-btn">Open HelloCash POS</button>
                 </div>
             </div>
         </div>
@@ -388,7 +317,6 @@
             const statusIcon = document.getElementById('deviceStatusIcon');
             const statusText = document.getElementById('deviceStatusText');
             const statusBtn = document.getElementById('deviceStatusBtn');
-            const quickInvoiceBtn = document.getElementById('quickInvoiceBtn');
             const invoiceModuleBtn = document.getElementById('invoiceModuleBtn');
             
             // If either key is missing, treat as no signature created yet
@@ -408,7 +336,6 @@
                 statusBtn.textContent = 'Register Device';
                 statusBtn.onclick = () => window.location.href = 'register_device.html';
                 statusBtn.style.display = 'inline-block';
-                quickInvoiceBtn.style.display = 'none';
                 invoiceModuleBtn.style.display = 'none';
                 return;
             }
@@ -433,10 +360,8 @@
                     statusBtn.style.display = 'none';
                     
                     // Enable invoice creation
-                    quickInvoiceBtn.disabled = false;
-                    quickInvoiceBtn.style.opacity = '1';
-                    quickInvoiceBtn.style.cursor = 'pointer';
                     invoiceModuleBtn.textContent = 'Open Invoice Creator';
+                    invoiceModuleBtn.style.display = 'inline-block';
                 } else {
                     // Signature not found on server - keep localStorage but show warning
                     statusIcon.textContent = '⚠️';
@@ -446,10 +371,8 @@
                     statusBtn.textContent = 'Register with Admin';
                     
                     // Disable invoice creation
-                    quickInvoiceBtn.disabled = true;
-                    quickInvoiceBtn.style.opacity = '0.6';
-                    quickInvoiceBtn.style.cursor = 'not-allowed';
                     invoiceModuleBtn.textContent = 'Register with Admin First';
+                    invoiceModuleBtn.style.display = 'inline-block';
                 }
             } else {
                 console.log('Signature verification failed, showing registration prompt');
@@ -462,10 +385,8 @@
                 statusBtn.style.display = 'inline-block';
                 
                 // Disable invoice creation
-                quickInvoiceBtn.disabled = true;
-                quickInvoiceBtn.style.opacity = '0.6';
-                quickInvoiceBtn.style.cursor = 'not-allowed';
                 invoiceModuleBtn.textContent = 'Register with Admin First';
+                invoiceModuleBtn.style.display = 'inline-block';
             }
         }
 
